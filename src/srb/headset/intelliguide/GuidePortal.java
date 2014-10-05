@@ -29,6 +29,10 @@ public class GuidePortal {
 		return name;
 	}
 	
+	public boolean checkPlayed(){
+		return played;
+	}
+	
 	public LatLng getCordinate(){
 		return cord;
 	}
@@ -59,26 +63,32 @@ public class GuidePortal {
 	}
 	
 	public boolean inRange(LatLng cur, double curDir){
-		double d = getDistance(cur);
-		double theta = getOrientation(cur, curDir);
-		double reTheta;
-		if(theta>180){reTheta = (360-theta)/3;}
-		else{reTheta = theta/3;}
-		double bound = 0.5*Math.cos(reTheta);
-		if(bound>d){return true;}
-		else{return false;}
+		if(!played){return false;}
+		else{
+			double d = getDistance(cur);
+			double theta = getOrientation(cur, curDir);
+			double reTheta;
+			if(theta>180){reTheta = (360-theta)/3;}
+			else{reTheta = theta/3;}
+			double bound = 0.5*Math.cos(reTheta);
+			if(bound>d){return true;}
+			else{return false;}
+		}
 	}
 	
 	public String inKM(LatLng cur, double curDir){
-		double d = getDistance(cur);
-		double theta = getOrientation(cur, curDir);
-		if(1>d){
-			if (theta>=45 && theta<135){return "rihgt";}
-			else if(theta>=135 && theta<225){return "back";}
-			else if(theta>=225 && theta<315){return "left";}
-			else{return "front";}
-		}else{
-			return null; 
+		if(played){return null;}
+		else{
+			double d = getDistance(cur);
+			double theta = getOrientation(cur, curDir);
+			if(1>d){
+				if (theta>=45 && theta<135){return "rihgt";}
+				else if(theta>=135 && theta<225){return "back";}
+				else if(theta>=225 && theta<315){return "left";}
+				else{return "front";}
+			}else{
+				return null; 
+			}
 		}
 	}
 }
