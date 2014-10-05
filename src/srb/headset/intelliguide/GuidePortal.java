@@ -10,7 +10,7 @@ public class GuidePortal {
 	private double cordY;
 	private String name;
 	private String guidePath;
-	private boolean played = false; 
+	public boolean played = false; 
 	
 	public GuidePortal(LatLng cord, String name, String path) {
 		this.cord = cord;
@@ -78,14 +78,15 @@ public class GuidePortal {
 	public boolean inRange(LatLng cur, double curDir){
 		if(played){return false;}
 		else{
-			double d = getDistance(cur);
-			double theta = getOrientation(cur, curDir);
-			double reTheta;
-			if(theta>180){reTheta = (360-theta)/3;}
-			else{reTheta = theta/3;}
-			double bound = 0.5*Math.cos(reTheta/180*Math.PI);
-			if(bound>d){return true;}
-			else{return false;}
+//			double d = getDistance(cur);
+//			double theta = getOrientation(cur, curDir);
+//			double reTheta;
+//			if(theta>180){reTheta = (360-theta)/3;}
+//			else{reTheta = theta/3;}
+//			double bound = 0.5*Math.cos(reTheta/180*Math.PI);
+//			if(bound>d){return true;}
+//			else{return false;}
+			return true;
 		}
 	}
 	

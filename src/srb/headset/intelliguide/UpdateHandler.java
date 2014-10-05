@@ -25,6 +25,14 @@ public class UpdateHandler extends Handler {
 			@Override
 			public void run() {
 				updateStatus();
+				while (activity.mMyDevice.getAudio3DPlayer().isPlaying()){
+					try {
+						self.wait(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 				self.postDelayed(mUpdater, mInterval);
 			}
 		};
@@ -59,11 +67,9 @@ public class UpdateHandler extends Handler {
 		}
 		if (minGP != null) {
 			// TODO play sound
-			m3DSound = activity.getIHS().createIHSAudio3DSound(IHS.SoundSource.ASSET, IHS.SoundFormat.WAVMONO16PCM,
-                    new String[] {minGP.getPath() });
-			m3DSound.setHeading((float) minGP.getPortalAngle(curLL));
-			m3DSound.setDistance((float)minGP.getDistance(curLL));
-			activity.mMyDevice.getAudio3DPlayer().addSound(m3DSound);
+			//m3DSound = activity.getIHS().createIHSAudio3DSound(IHS.SoundSource.ASSET, IHS.SoundFormat.WAVMONO16PCM,
+                    //new String[] {minGP.getPath() });
+			//activity.mMyDevice.getAudio3DPlayer().addSound(m3DSound);
 			activity.mMyDevice.getAudio3DPlayer().play();
 			activity.changeInfoText(minGP.getName());
 		}
@@ -158,10 +164,13 @@ public class UpdateHandler extends Handler {
 			// TODO play sound
 			m3DSound = activity.getIHS().createIHSAudio3DSound(IHS.SoundSource.ASSET, IHS.SoundFormat.WAVMONO16PCM,
                     new String[] {minGP.getPath() });
-			m3DSound.setHeading((float) minGP.getPortalAngle(curLL));
-			m3DSound.setDistance((float)minGP.getDistance(curLL));
+			Log.d("BlueFUCK",Double.toString(minGP.getPortalAngle(curLL)));
+			m3DSound.setHeading((float) (180- minGP.getPortalAngle (curLL)));
+			m3DSound.setDistance((float)(minGP.getDistance(curLL)*2));
+			activity.mMyDevice.getAudio3DPlayer().clearSounds();
 			activity.mMyDevice.getAudio3DPlayer().addSound(m3DSound);
 			activity.mMyDevice.getAudio3DPlayer().play();
+			minGP.played = true;
 			activity.changeInfoText(minGP.getName());
 		}
 	}
