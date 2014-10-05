@@ -224,10 +224,16 @@ GooglePlayServicesClient.OnConnectionFailedListener{
             // below.
             mMyDevice.addListener(mDeviceInfoListener);
             sensorPack = mMyDevice.getSensorPack();
-            headsetConnected = true;
-            if (mapConnected){
+            headsetConnected = (sensorPack != null);
+            if (mapConnected & headsetConnected){
     	        mHandler.startTask();
             }
+            
+            if (sensorPack == null){
+            	Toast.makeText(MainActivity.this, "Sensor null", Toast.LENGTH_SHORT).show();
+            }
+            
+            
             
 
             // Add the device sensor listener to the sensorpack of the IHS device
