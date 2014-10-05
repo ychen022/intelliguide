@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 

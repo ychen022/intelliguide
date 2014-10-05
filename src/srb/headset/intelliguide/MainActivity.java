@@ -49,7 +49,7 @@ GooglePlayServicesClient.OnConnectionFailedListener{
     CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 //	public static View myView;
 	
-	private UpdateHandler mHandler;
+	private UpdateHandler mHandler = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,10 +57,10 @@ GooglePlayServicesClient.OnConnectionFailedListener{
         setContentView(R.layout.activity_main);
 
         guidePortals = new ArrayList<GuidePortal>();
-        GuidePortal kresge = new GuidePortal(new LatLng(42.3583099,-71.0945316), "Kresge", "kresge.wav");
+        GuidePortal kresge = new GuidePortal(new LatLng(42.358139, -71.095030), "Kresge", "kresge.wav");
         GuidePortal simmons = new GuidePortal(new LatLng(42.357267, -71.101194), "Simmons", "simmons.wav");
-        GuidePortal flour = new GuidePortal(new LatLng(42.3590512,-71.0969939), "Flour", "flour.wav");
-        GuidePortal medialab = new GuidePortal(new LatLng(42.3600739,-71.0916402), "Media Lab", "medialab.wav");
+        GuidePortal flour = new GuidePortal(new LatLng(42.360938, -71.096640), "Flour", "flour.wav");
+        GuidePortal medialab = new GuidePortal(new LatLng(42.360986, -71.087756), "Media Lab", "medialab.wav");
         guidePortals.add(kresge);
         guidePortals.add(simmons);
         guidePortals.add(flour);
@@ -86,6 +86,19 @@ GooglePlayServicesClient.OnConnectionFailedListener{
         mLocationClient.connect();
     }
 
+    @Override
+    public void onPause(){
+    	super.onPause();
+    	mHandler.stopTask();
+    }
+    
+    @Override
+    public void onResume(){
+    	super.onResume();
+    	if (mHandler!=null){
+    		mHandler.startTask();
+    	}
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

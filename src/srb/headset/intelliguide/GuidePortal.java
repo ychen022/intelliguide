@@ -63,14 +63,14 @@ public class GuidePortal {
 	}
 	
 	public boolean inRange(LatLng cur, double curDir){
-		if(!played){return false;}
+		if(played){return false;}
 		else{
 			double d = getDistance(cur);
 			double theta = getOrientation(cur, curDir);
 			double reTheta;
 			if(theta>180){reTheta = (360-theta)/3;}
 			else{reTheta = theta/3;}
-			double bound = 0.5*Math.cos(reTheta);
+			double bound = 0.5*Math.cos(reTheta/180*Math.PI);
 			if(bound>d){return true;}
 			else{return false;}
 		}
