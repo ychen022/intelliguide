@@ -1,29 +1,35 @@
 package srb.intelligent.intelliguide;
 
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
+import android.location.Location;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.provider.SyncStateContract.Constants;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.LatLng;
 
 
 
 public class MainActivity extends ActionBarActivity {
+	
+	public static MapFragment mapFragment;
+	public static int MAP_ZOOM = 10;
+	public GoogleMap map;
+	public Location location;
+//	public static View myView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    	super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
-                    .commit();
-        }
+
+        mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        map = mapFragment.getMap();
+        centerMapOnMyLocation();
     }
 
 
@@ -45,20 +51,22 @@ public class MainActivity extends ActionBarActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+    
+    private void centerMapOnMyLocation() {
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
+    	LatLng myLocation = new LatLng(0,0 );;
+        map.setMyLocationEnabled(true);
 
-        public PlaceholderFragment() {
+        location = map.getMyLocation();
+
+        if (location != null) {
+            myLocation = new LatLng(location.getLatitude(),
+                    location.getLongitude());
         }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            return rootView;
-        }
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation,
+                MAP_ZOOM));
     }
+
 }
+
+
