@@ -136,6 +136,7 @@ public class UpdateHandler extends Handler {
 	private void updateStatus() {
 		double minScore = 1000;
 		GuidePortal minGP = null;
+		Log.d("update","starting");
 
 		LatLng curLL = activity.myLocation;
 		double curDir = activity.sensorPack.getCompassHeading();
@@ -152,6 +153,7 @@ public class UpdateHandler extends Handler {
 		}
 
 		if (minGP != null && !activity.mMyDevice.getAudio3DPlayer().isPlaying()) {
+			Log.d("update","playing");
 			m3DSound = activity.getIHS().createIHSAudio3DSound(IHS.SoundSource.ASSET, IHS.SoundFormat.WAVMONO16PCM,
                     new String[] {minGP.getPath() });
 			m3DSound.setHeading((float) (180- minGP.getPortalAngle (curLL)));

@@ -3,10 +3,12 @@ package srb.headset.intelliguide;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -18,11 +20,10 @@ import com.gn.intelligentheadset.IHSDevice.IHSDeviceConnectionState;
 import com.gn.intelligentheadset.IHSDevice.IHSDeviceListener;
 import com.gn.intelligentheadset.IHSListener;
 import com.gn.intelligentheadset.subsys.IHSButtonHandler;
-import com.gn.intelligentheadset.subsys.IHSSensorPack;
 import com.gn.intelligentheadset.subsys.IHSButtonHandler.IHSButton;
 import com.gn.intelligentheadset.subsys.IHSButtonHandler.IHSButtonEvent;
 import com.gn.intelligentheadset.subsys.IHSButtonHandler.IHSButtonListener;
-import com.gn.intelligentheadset.subsys.IHSButtonHandler.IHSButtonSupportLevel;
+import com.gn.intelligentheadset.subsys.IHSSensorPack;
 import com.gn.intelligentheadset.subsys.IHSSensorPack.IHSSensorsListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
@@ -235,6 +236,7 @@ GooglePlayServicesClient.OnConnectionFailedListener{
             // to be able to notified on events. See declaration of mDeviceInfoListener
             // below.
             mMyDevice.addListener(mDeviceInfoListener);
+            mMyDevice.getButtonHandler().addListener(mButtonListener);
             sensorPack = mMyDevice.getSensorPack();
           
             if (sensorPack!=null){
@@ -301,9 +303,10 @@ private IHSDeviceListener  mDeviceInfoListener   = new IHSDeviceListener() {
 
         @Override
         public void didPressIHSButton(IHSButtonHandler handler, IHSButton button, IHSButtonEvent event) {
-            if (button == IHSButton.IHSButtonRight){
-            	buttonPressed();
-            }
+        	buttonPressed();
+        	Toast.makeText(MainActivity.this, "Button", 0).show();
+//            if (button == IHSButton.IHSButtonRight){
+//            }
 
         }
     };
