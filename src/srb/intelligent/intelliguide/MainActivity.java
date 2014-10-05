@@ -1,37 +1,46 @@
 package srb.intelligent.intelliguide;
 
 import srb.intelligent.intelliguide.R;
+import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.gn.intelligentheadset.IHS;
 import com.gn.intelligentheadset.IHSDevice;
 import com.gn.intelligentheadset.IHSDevice.IHSDeviceConnectionState;
 import com.gn.intelligentheadset.IHSDevice.IHSDeviceListener;
 import com.gn.intelligentheadset.IHSListener;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
-
-
-public class MainActivity extends ActionBarActivity {
-	private IHS mIHS;
-
-    // The currently selected device
-    private IHSDevice mMyDevice = null;
-
-    // If you change the package name, visit developer.intelligentheadset.com and obtain a matching API key.
-    private final static String apikey    = "4zeUfJXKppXb5nomDNGsaNV2fiU5ATUW/sQCihynXAvN22fzO0YHXwbZfesD+IEg";
+public class MainActivity extends ActionBarActivity implements
+GooglePlayServicesClient.ConnectionCallbacks,
+GooglePlayServicesClient.OnConnectionFailedListener{
 	
 	public static MapFragment mapFragment;
-	public static int MAP_ZOOM = 10;
+	public static int MAP_ZOOM = 15;
 	public GoogleMap map;
 	public Location location;
+	private IHS mIHS;
+
+// The currently selected device
+	private IHSDevice mMyDevice = null;
+
+// If you change the package name, visit developer.intelligentheadset.com and obtain a matching API key.
+	private final static String apikey    = "4zeUfJXKppXb5nomDNGsaNV2fiU5ATUW/sQCihynXAvN22fzO0YHXwbZfesD+IEg";
+	public LocationClient mLocationClient;
+	private final static int
+    CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+//	public static View myView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +50,11 @@ public class MainActivity extends ActionBarActivity {
         mIHS = new IHS(this, apikey, mIHSListener);
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         map = mapFragment.getMap();
-        centerMapOnMyLocation();
+        map.setMyLocationEnabled(true);
+
+        mLocationClient = new LocationClient(this, this, this);
+        // Connect the client.
+        mLocationClient.connect();
     }
 
 
@@ -64,12 +77,68 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
     
+    /*
+     * Called by Location Services when the request to connect the
+     * client finishes successfully. At this point, you can
+     * request the current location or start periodic updates
+     */
+    @Override
+    public void onConnected(Bundle dataBundle) {
+        // Display the connection status
+        Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
+        centerMapOnMyLocation();
+    }
+    /*
+     * Called by Location Services if the connection to the
+     * location client drops because of an error.
+     */
+    @Override
+    public void onDisconnected() {
+        // Display the connection status
+        Toast.makeText(this, "Disconnected. Please re-connect.",
+                Toast.LENGTH_SHORT).show();
+    }
+    /*
+     * Called by Location Services if the attempt to
+     * Location Services fails.
+     */
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        /*
+         * Google Play services can resolve some errors it detects.
+         * If the error has a resolution, try sending an Intent to
+         * start a Google Play services activity that can resolve
+         * error.
+         */
+        if (connectionResult.hasResolution()) {
+            try {
+                // Start an Activity that tries to resolve the error
+                connectionResult.startResolutionForResult(
+                        this,
+                        CONNECTION_FAILURE_RESOLUTION_REQUEST);
+                /*
+                 * Thrown if Google Play services canceled the original
+                 * PendingIntent
+                 */
+            } catch (IntentSender.SendIntentException e) {
+                // Log the error
+                e.printStackTrace();
+            }
+        } else {
+            /*
+             * If no resolution is available, display a dialog to the
+             * user with the error.
+             */
+        	Toast.makeText(this, "Failed to connect", connectionResult.getErrorCode()).show();
+        }
+    }
+    
     private void centerMapOnMyLocation() {
 
     	LatLng myLocation = new LatLng(0,0 );;
-        map.setMyLocationEnabled(true);
 
-        location = map.getMyLocation();
+        //location = map.getMyLocation();
+    	location = mLocationClient.getLastLocation();
 
         if (location != null) {
             myLocation = new LatLng(location.getLatitude(),
