@@ -17,7 +17,12 @@ import com.gn.intelligentheadset.IHSDevice;
 import com.gn.intelligentheadset.IHSDevice.IHSDeviceConnectionState;
 import com.gn.intelligentheadset.IHSDevice.IHSDeviceListener;
 import com.gn.intelligentheadset.IHSListener;
+import com.gn.intelligentheadset.subsys.IHSButtonHandler;
 import com.gn.intelligentheadset.subsys.IHSSensorPack;
+import com.gn.intelligentheadset.subsys.IHSButtonHandler.IHSButton;
+import com.gn.intelligentheadset.subsys.IHSButtonHandler.IHSButtonEvent;
+import com.gn.intelligentheadset.subsys.IHSButtonHandler.IHSButtonListener;
+import com.gn.intelligentheadset.subsys.IHSButtonHandler.IHSButtonSupportLevel;
 import com.gn.intelligentheadset.subsys.IHSSensorPack.IHSSensorsListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
@@ -204,6 +209,10 @@ GooglePlayServicesClient.OnConnectionFailedListener{
                 MAP_ZOOM));
     }
     
+    public void buttonPressed(){
+    	
+    }
+    
     private IHSListener mIHSListener = new IHSListener() {
 
         @Override
@@ -284,6 +293,16 @@ private IHSDeviceListener  mDeviceInfoListener   = new IHSDeviceListener() {
                     //imageLogo.setAlpha(0f);
                     break;
             }
+        }
+    };
+    private IHSButtonListener mButtonListener = new IHSButtonListener() {
+
+        @Override
+        public void didPressIHSButton(IHSButtonHandler handler, IHSButton button, IHSButtonEvent event) {
+            if (button == IHSButton.IHSButtonRight){
+            	buttonPressed();
+            }
+
         }
     };
     
