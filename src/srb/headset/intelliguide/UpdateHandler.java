@@ -61,7 +61,7 @@ public class UpdateHandler extends Handler {
 			// TODO play sound
 			m3DSound = activity.getIHS().createIHSAudio3DSound(IHS.SoundSource.ASSET, IHS.SoundFormat.WAVMONO16PCM,
                     new String[] {minGP.getPath() });
-			m3DSound.setHeading((float) minGP.getOrientation(curLL, curDir)); //change
+			m3DSound.setHeading((float) minGP.getPortalAngle(curLL));
 			activity.mMyDevice.getAudio3DPlayer().addSound(m3DSound);
 			activity.mMyDevice.getAudio3DPlayer().play();
 			activity.changeInfoText(minGP.getName());
@@ -157,7 +157,7 @@ public class UpdateHandler extends Handler {
 			// TODO play sound
 			m3DSound = activity.getIHS().createIHSAudio3DSound(IHS.SoundSource.ASSET, IHS.SoundFormat.WAVMONO16PCM,
                     new String[] {minGP.getPath() });
-			m3DSound.setHeading((float) minGP.getOrientation(curLL, curDir)); //change
+			m3DSound.setHeading((float) minGP.getPortalAngle(curLL)); 
 			activity.mMyDevice.getAudio3DPlayer().addSound(m3DSound);
 			activity.mMyDevice.getAudio3DPlayer().play();
 			activity.changeInfoText(minGP.getName());
