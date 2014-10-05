@@ -52,6 +52,13 @@ public class GuidePortal {
         return Radius * c;
 	}
 	
+	public double getPortalAngle(LatLng cur){
+		double curX = cur.longitude;
+		double curY = cur.latitude;
+		double theta = 180*Math.atan2((cordX-curX),(cordY-curY))/Math.PI;
+		return -1*theta+180;
+	}
+		
 	public double getOrientation(LatLng cur, double curDir){
 		double curX = cur.longitude;
 		double curY = cur.latitude;
