@@ -56,6 +56,15 @@ public class GuidePortal {
         return Radius * c;
 	}
 	
+	public double getPortalAngle(LatLng cur){
+		double curX = cur.longitude;
+		double curY = cur.latitude;
+		double theta = 180*Math.atan2((cordX-curX),(cordY-curY))/Math.PI;
+		double portalDir = -1*theta+180;
+		if(portalDir>180){portalDir=portalDir-360;}
+		return portalDir;
+	}
+		
 	public double getOrientation(LatLng cur, double curDir){
 		double curX = cur.longitude;
 		double curY = cur.latitude;
@@ -67,14 +76,14 @@ public class GuidePortal {
 	}
 	
 	public boolean inRange(LatLng cur, double curDir){
-		if(!played){return false;}
+		if(played){return false;}
 		else{
 			double d = getDistance(cur);
 			double theta = getOrientation(cur, curDir);
 			double reTheta;
 			if(theta>180){reTheta = (360-theta)/3;}
 			else{reTheta = theta/3;}
-			double bound = 0.5*Math.cos(reTheta);
+			double bound = 0.5*Math.cos(reTheta/180*Math.PI);
 			if(bound>d){return true;}
 			else{return false;}
 		}

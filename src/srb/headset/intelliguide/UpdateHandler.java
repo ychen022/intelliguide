@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
 
 import com.gn.intelligentheadset.IHS;
 import com.gn.intelligentheadset.subsys.IHSAudio3DSound;
