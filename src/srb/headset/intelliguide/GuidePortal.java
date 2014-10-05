@@ -82,7 +82,7 @@ public class GuidePortal {
 			double d = getDistance(cur);
 			double theta = getOrientation(cur, curDir);
 			if(1>d){
-				if (theta>=45 && theta<135){return "rihgt";}
+				if (theta>=45 && theta<135){return "right";}
 				else if(theta>=135 && theta<225){return "back";}
 				else if(theta>=225 && theta<315){return "left";}
 				else{return "front";}
