@@ -11,7 +11,7 @@ import com.gn.intelligentheadset.subsys.IHSAudio3DSound;
 import com.google.android.gms.maps.model.LatLng;
 
 public class UpdateHandler extends Handler {
-	private int mInterval = 5000;
+	private int mInterval = 2000;
 	private Runnable mUpdater;
 	private MainActivity activity;
 	private TextToSpeech mTts;
