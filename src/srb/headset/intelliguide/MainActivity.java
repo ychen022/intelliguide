@@ -1,6 +1,6 @@
-package srb.intelligent.intelliguide;
+package srb.headset.intelliguide;
 
-import srb.intelligent.intelliguide.R;
+import srb.headset.intelliguide.R;
 import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;

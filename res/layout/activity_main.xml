@@ -4,6 +4,4 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     class="com.google.android.gms.maps.MapFragment"
-    android:name="srb.intelligent.intelliguide.MainActivity"/>
-
-
+    android:name="srb.headset.intelliguide.MainActivity" xmlns:tools="http://schemas.android.com/tools"/>
