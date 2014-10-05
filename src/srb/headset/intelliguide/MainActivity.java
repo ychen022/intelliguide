@@ -210,7 +210,9 @@ GooglePlayServicesClient.OnConnectionFailedListener{
     }
     
     public void buttonPressed(){
-    	
+    	if (mMyDevice.getAudio3DPlayer().isPlaying()){
+    		mMyDevice.getAudio3DPlayer().stop();
+    	}
     }
     
     private IHSListener mIHSListener = new IHSListener() {
