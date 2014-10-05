@@ -1,4 +1,4 @@
-package srb.intelligent.intelliguide;
+package srb.headset.intelliguide;
 
 import java.text.DecimalFormat;
 import android.util.Log;
