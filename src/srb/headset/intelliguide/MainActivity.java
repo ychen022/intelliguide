@@ -18,6 +18,7 @@ import com.gn.intelligentheadset.IHSDevice.IHSDeviceConnectionState;
 import com.gn.intelligentheadset.IHSDevice.IHSDeviceListener;
 import com.gn.intelligentheadset.IHSListener;
 import com.gn.intelligentheadset.subsys.IHSSensorPack;
+import com.gn.intelligentheadset.subsys.IHSSensorPack.IHSSensorsListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.location.LocationClient;
@@ -224,8 +225,9 @@ GooglePlayServicesClient.OnConnectionFailedListener{
             // below.
             mMyDevice.addListener(mDeviceInfoListener);
             sensorPack = mMyDevice.getSensorPack();
-
+          
             if (sensorPack!=null){
+            	sensorPack.addListener(mSensorpackListener);
 	            headsetConnected = true;
 	            if (mapConnected){
 	    	        mHandler.startTask();
@@ -283,6 +285,14 @@ private IHSDeviceListener  mDeviceInfoListener   = new IHSDeviceListener() {
                     break;
             }
         }
+    };
+    
+    private IHSSensorsListener mSensorpackListener = new IHSSensorsListener() {
+        @Override
+        public void compassHeadingChanged(IHSSensorPack ihs, float heading){
+        	mMyDevice.getAudio3DPlayer().setHeading(heading);
+        }
+
     };
     
     public IHS getIHS(){
