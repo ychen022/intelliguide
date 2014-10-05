@@ -101,7 +101,7 @@ GooglePlayServicesClient.OnConnectionFailedListener{
     @Override
     public void onResume(){
     	super.onResume();
-    	if (mHandler!=null){
+    	if (mHandler!=null && headsetConnected && mapConnected){
     		mHandler.startTask();
     	}
     }
@@ -224,17 +224,13 @@ GooglePlayServicesClient.OnConnectionFailedListener{
             // below.
             mMyDevice.addListener(mDeviceInfoListener);
             sensorPack = mMyDevice.getSensorPack();
-            headsetConnected = (sensorPack != null);
-            if (mapConnected & headsetConnected){
-    	        mHandler.startTask();
+
+            if (sensorPack!=null){
+	            headsetConnected = true;
+	            if (mapConnected){
+	    	        mHandler.startTask();
+	            }
             }
-            
-            if (sensorPack == null){
-            	Toast.makeText(MainActivity.this, "Sensor null", Toast.LENGTH_SHORT).show();
-            }
-            
-            
-            
 
             // Add the device sensor listener to the sensorpack of the IHS device
             // to be able to notified on events. See declaration of mDeviceSensorListener
