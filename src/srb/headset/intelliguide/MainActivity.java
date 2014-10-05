@@ -1,6 +1,5 @@
 package srb.headset.intelliguide;
 
-import srb.headset.intelliguide.R;
 import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
@@ -14,6 +13,7 @@ import com.gn.intelligentheadset.IHSDevice;
 import com.gn.intelligentheadset.IHSDevice.IHSDeviceConnectionState;
 import com.gn.intelligentheadset.IHSDevice.IHSDeviceListener;
 import com.gn.intelligentheadset.IHSListener;
+import com.gn.intelligentheadset.subsys.IHSSensorPack;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.location.LocationClient;
@@ -34,9 +34,11 @@ GooglePlayServicesClient.OnConnectionFailedListener{
 
 // The currently selected device
 	private IHSDevice mMyDevice = null;
+// entry to sensor data
+	private IHSSensorPack sensorPack = null;
 
 // If you change the package name, visit developer.intelligentheadset.com and obtain a matching API key.
-	private final static String apikey    = "4zeUfJXKppXb5nomDNGsaNV2fiU5ATUW/sQCihynXAvN22fzO0YHXwbZfesD+IEg";
+	private final static String apikey    = "k8XipEfLXKx7hUIzaN+K5GErDoFRD5JhckYAT03t1Ok=";
 	public LocationClient mLocationClient;
 	private final static int
     CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
@@ -85,7 +87,7 @@ GooglePlayServicesClient.OnConnectionFailedListener{
     @Override
     public void onConnected(Bundle dataBundle) {
         // Display the connection status
-        Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
         centerMapOnMyLocation();
     }
     /*
@@ -95,7 +97,7 @@ GooglePlayServicesClient.OnConnectionFailedListener{
     @Override
     public void onDisconnected() {
         // Display the connection status
-        Toast.makeText(this, "Disconnected. Please re-connect.",
+       Toast.makeText(this, "Disconnected. Please re-connect.",
                 Toast.LENGTH_SHORT).show();
     }
     /*
@@ -152,7 +154,7 @@ GooglePlayServicesClient.OnConnectionFailedListener{
 
         @Override
         public void onAPIstatus(APIStatus apiStatus) {
-        	System.out.println("yes");
+        	Toast.makeText(MainActivity.this, "API Connect", Toast.LENGTH_LONG).show();
             if (apiStatus == APIStatus.READY) {
                 // We want it to stay alive until explicitly stopped (in onBackPressed)
                 mIHS.enableBackgroundOperation();
@@ -168,6 +170,8 @@ GooglePlayServicesClient.OnConnectionFailedListener{
             // to be able to notified on events. See declaration of mDeviceInfoListener
             // below.
             mMyDevice.addListener(mDeviceInfoListener);
+            sensorPack = mMyDevice.getSensorPack();
+            
 
             // Add the device sensor listener to the sensorpack of the IHS device
             // to be able to notified on events. See declaration of mDeviceSensorListener
@@ -176,60 +180,19 @@ GooglePlayServicesClient.OnConnectionFailedListener{
         }
     };
 
-// Listener for sensorpack-level events
-//private IHSSensorsListener mDeviceSensorListener = new IHSSensorsListener() {
-//        @Override
-//        public void yawChanged(IHSSensorPack ihs, float yaw) {
-//            // Rotate the 'arrow' image representing the current yaw
-//            imageYaw.setRotation(yaw);
-//            // Display the current yaw in text
-//            tvYaw.setText(yaw + "�");
-//        }
-//
-//        @Override
-//        public void gyroCalibrationChanged(IHSSensorPack ihs, boolean isCalibrated) {
-//            if (isCalibrated) {
-//                Toast.makeText(MainActivity.this, "Gyro is calibrated!", Toast.LENGTH_SHORT).show();
-//            }
-//            // Update 'isGyroUncalibrated' checkbox
-//            cbGyroCalib.setChecked(isCalibrated);
-//        }
-//
-//        @Override
-//        public void magneticDisturbanceDetetionChanged(IHSSensorPack arg0, boolean disturbed) {
-//            cbMagDisturb.setChecked(disturbed);
-//        };
-//
-//        @Override
-//        public void fusedHeadingChanged(IHSSensorPack ihs, float heading) {
-//            // Rotate the 'arrow' image representing the current fused heading
-//            imageFused.setRotation(heading);
-//            // Display the current fused heading in text
-//            tvFused.setText(heading + "�");
-//        }
-//
-//        @Override
-//        public void compassHeadingChanged(IHSSensorPack ihs, float heading) {
-//            // Rotate the 'arrow' image representing the current compass heading
-//            imageCompass.setRotation(heading);
-//            // Display the current compass heading in text
-//            tvCompass.setText(heading + "�");
-//        }
-//    };
-//
 // Listener for device-level events
 private IHSDeviceListener  mDeviceInfoListener   = new IHSDeviceListener() {
 
         @Override
         public void connectedStateChanged(IHSDevice device, IHSDeviceConnectionState connectionState) {
             super.connectedStateChanged(device, connectionState);
-            System.out.println("Headset Connected");
+            //Toast.makeText(MainActivity.this, "Connectivity changed", Toast.LENGTH_SHORT).show();
 
             switch (connectionState) {
                 case IHSDeviceConnectionStateConnected:
                     // When we are fully connected, we will show an opaque logo
                     //imageLogo.setAlpha(1f);
-                	System.out.println("Headset Connected");
+                	Toast.makeText(MainActivity.this, "Device Connected", Toast.LENGTH_SHORT).show();
                     break;
                 case IHSDeviceConnectionStateConnecting:
                 	break;
