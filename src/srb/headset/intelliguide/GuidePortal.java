@@ -56,7 +56,9 @@ public class GuidePortal {
 		double curX = cur.longitude;
 		double curY = cur.latitude;
 		double theta = 180*Math.atan2((cordX-curX),(cordY-curY))/Math.PI;
-		return -1*theta+180;
+		double portalDir = -1*theta+180;
+		if(portalDir>180){portalDir=portalDir-360;}
+		return portalDir;
 	}
 		
 	public double getOrientation(LatLng cur, double curDir){
