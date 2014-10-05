@@ -25,14 +25,6 @@ public class UpdateHandler extends Handler {
 			@Override
 			public void run() {
 				updateStatus();
-				while (activity.mMyDevice.getAudio3DPlayer().isPlaying()){
-					try {
-						self.wait(1000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
 				self.postDelayed(mUpdater, mInterval);
 			}
 		};
@@ -146,7 +138,6 @@ public class UpdateHandler extends Handler {
 		GuidePortal minGP = null;
 
 		LatLng curLL = activity.myLocation;
-		 // TODO Replace with direction from headset
 		double curDir = activity.sensorPack.getCompassHeading();
 		for (GuidePortal p : activity.guidePortals) {
 			if (p.inRange(curLL, curDir)) {
@@ -160,11 +151,9 @@ public class UpdateHandler extends Handler {
 			}
 		}
 
-		if (minGP != null) {
-			// TODO play sound
+		if (minGP != null && !activity.mMyDevice.getAudio3DPlayer().isPlaying()) {
 			m3DSound = activity.getIHS().createIHSAudio3DSound(IHS.SoundSource.ASSET, IHS.SoundFormat.WAVMONO16PCM,
                     new String[] {minGP.getPath() });
-			Log.d("BlueFUCK",Double.toString(minGP.getPortalAngle(curLL)));
 			m3DSound.setHeading((float) (180- minGP.getPortalAngle (curLL)));
 			m3DSound.setDistance((float)(minGP.getDistance(curLL)*2));
 			activity.mMyDevice.getAudio3DPlayer().clearSounds();
