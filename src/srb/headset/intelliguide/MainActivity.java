@@ -57,6 +57,15 @@ GooglePlayServicesClient.OnConnectionFailedListener{
         setContentView(R.layout.activity_main);
 
         guidePortals = new ArrayList<GuidePortal>();
+        GuidePortal kresge = new GuidePortal(new LatLng(42.3583099,-71.0945316), "Kresge", "kresge.wav");
+        GuidePortal simmons = new GuidePortal(new LatLng(42.357267, -71.101194), "Simmons", "simmons.wav");
+        GuidePortal flour = new GuidePortal(new LatLng(42.3590512,-71.0969939), "Flour", "flour.wav");
+        GuidePortal medialab = new GuidePortal(new LatLng(42.3600739,-71.0916402), "Media Lab", "medialab.wav");
+        guidePortals.add(kresge);
+        guidePortals.add(simmons);
+        guidePortals.add(flour);
+        guidePortals.add(medialab);
+        
         // Add guideportals
         
         mIHS = new IHS(this, apikey, mIHSListener);
