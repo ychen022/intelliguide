@@ -1,11 +1,15 @@
 package srb.headset.intelliguide;
 
+
+import java.util.ArrayList;
+import java.util.List;
 import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gn.intelligentheadset.IHS;
@@ -21,21 +25,25 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MainActivity extends ActionBarActivity implements
 GooglePlayServicesClient.ConnectionCallbacks,
 GooglePlayServicesClient.OnConnectionFailedListener{
 	
 	public static MapFragment mapFragment;
+	public static TextView infoView;
 	public static int MAP_ZOOM = 15;
 	public GoogleMap map;
 	public Location location;
+	public LatLng myLocation = new LatLng(0,0 );
+	public List<GuidePortal> guidePortals;
 	private IHS mIHS;
 
 // The currently selected device
-	private IHSDevice mMyDevice = null;
+	public IHSDevice mMyDevice = null;
 // entry to sensor data
-	private IHSSensorPack sensorPack = null;
+	public IHSSensorPack sensorPack = null;
 
 // If you change the package name, visit developer.intelligentheadset.com and obtain a matching API key.
 	private final static String apikey    = "k8XipEfLXKx7hUIzaN+K5GErDoFRD5JhckYAT03t1Ok=";
@@ -43,16 +51,29 @@ GooglePlayServicesClient.OnConnectionFailedListener{
 	private final static int
     CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 //	public static View myView;
+	
+	private UpdateHandler mHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        guidePortals = new ArrayList<GuidePortal>();
+        // Add guideportals
+        
         mIHS = new IHS(this, apikey, mIHSListener);
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         map = mapFragment.getMap();
         map.setMyLocationEnabled(true);
+        for (GuidePortal g:guidePortals){
+        	map.addMarker(new MarkerOptions()
+            .position(g.getCordinate())
+            .title(g.getName()));
+        }
+        
+        infoView = (TextView) findViewById(R.id.info);
+        infoView.setText("No points of interests nearby");
 
         mLocationClient = new LocationClient(this, this, this);
         // Connect the client.
@@ -89,6 +110,8 @@ GooglePlayServicesClient.OnConnectionFailedListener{
         // Display the connection status
         //Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
         centerMapOnMyLocation();
+        mHandler = new UpdateHandler(this);
+        mHandler.startTask();
     }
     /*
      * Called by Location Services if the connection to the
@@ -99,6 +122,7 @@ GooglePlayServicesClient.OnConnectionFailedListener{
         // Display the connection status
        Toast.makeText(this, "Disconnected. Please re-connect.",
                 Toast.LENGTH_SHORT).show();
+        mHandler.stopTask();
     }
     /*
      * Called by Location Services if the attempt to
@@ -135,9 +159,11 @@ GooglePlayServicesClient.OnConnectionFailedListener{
         }
     }
     
-    private void centerMapOnMyLocation() {
-
-    	LatLng myLocation = new LatLng(0,0 );;
+    public void changeInfoText(String info){
+    	infoView.setText(info);
+    }
+    
+    public void centerMapOnMyLocation() {
 
         //location = map.getMyLocation();
     	location = mLocationClient.getLastLocation();
@@ -225,6 +251,10 @@ private IHSDeviceListener  mDeviceInfoListener   = new IHSDeviceListener() {
             }
         }
     };
+    
+    public IHS getIHS(){
+    	return mIHS;
+    }
 
 }
 
