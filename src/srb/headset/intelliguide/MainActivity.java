@@ -39,6 +39,8 @@ GooglePlayServicesClient.OnConnectionFailedListener{
 	public LatLng myLocation = new LatLng(0,0 );
 	public List<GuidePortal> guidePortals;
 	private IHS mIHS;
+	private boolean mapConnected = false;
+	private boolean headsetConnected = false;
 
 // The currently selected device
 	public IHSDevice mMyDevice = null;
@@ -87,6 +89,7 @@ GooglePlayServicesClient.OnConnectionFailedListener{
         mLocationClient = new LocationClient(this, this, this);
         // Connect the client.
         mLocationClient.connect();
+        mHandler = new UpdateHandler(this);
     }
 
     @Override
@@ -132,8 +135,10 @@ GooglePlayServicesClient.OnConnectionFailedListener{
         // Display the connection status
         //Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
         centerMapOnMyLocation();
-        mHandler = new UpdateHandler(this);
-        mHandler.startTask();
+        mapConnected = true;
+        if (headsetConnected){
+	        mHandler.startTask();
+        }
     }
     /*
      * Called by Location Services if the connection to the
@@ -219,6 +224,10 @@ GooglePlayServicesClient.OnConnectionFailedListener{
             // below.
             mMyDevice.addListener(mDeviceInfoListener);
             sensorPack = mMyDevice.getSensorPack();
+            headsetConnected = true;
+            if (mapConnected){
+    	        mHandler.startTask();
+            }
             
 
             // Add the device sensor listener to the sensorpack of the IHS device
